@@ -1,0 +1,39 @@
+<resources>
+    <string name="app_name">Dicoding Story</string>
+
+    <string name="login_heading">Login</string>
+    <string name="register_heading">Register Account</string>
+    <string name="edt_name_label">Full Name</string>
+    <string name="edt_email_label">Email</string>
+    <string name="edt_password_label">Password</string>
+    <string name="edt_name_hint">Full Name</string>
+    <string name="edt_email_hint">Email Address</string>
+    <string name="edt_password_hint">Password</string>
+    <string name="register_btn">Register</string>
+    <string name="login_btn">Login</string>
+    <string name="already_register">Have an account? </string>
+    <string name="not_yet_register">Don\'t have an account?</string>
+    <string name="to_login"><u>Login</u></string>
+    <string name="to_register"><u>Register</u></string>
+    <string name="error_msg">An error has occured</string>
+    <string name="password_error">Password must be at least 6 characters</string>
+    <string name="email_error">Must be a valid email address</string>
+    <string name="name_error">Full Name must not be empty</string>
+    <string name="description_error">Description must not be empty</string>
+    <string name="no_data">No stories are currently available</string>
+    <string name="list_item_description">Did you ever hear the tragedy of Darth Plagueis The Wise?</string>
+    <string name="list_item_name">Darth Sidious</string>
+    <string name="list_item_timestamp">3 days ago</string>
+    <string name="more_description">%1$s… more</string>
+    <string name="add_story_heading">Add Story</string>
+    <string name="gallery_btn">Gallery</string>
+    <string name="camera_btn">Camera</string>
+    <string name="description_hint">Description</string>
+    <string name="upload_btn">Upload</string>
+    <string name="no_permission">Did not received permission</string>
+    <string name="failed_take_picture">Failed to take picture</string>
+    <string name="failed_camera_open">Failed to open camera</string>
+    <string name="stack_desc">Stories Stack</string>
+    <string name="menu_add_story">Add Story</string>
+    <string name="menu_logout">Logout</string>
+</resources>

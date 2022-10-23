@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="16dp"
+    tools:context=".ui.add.AddStoryActivity">
+
+    <TextView
+        android:id="@+id/add_story_heading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/add_story_heading"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/img_story"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toTopOf="@id/btn_gallery"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/add_story_heading"
+        app:layout_constraintWidth_percent="0.75"
+        app:srcCompat="@drawable/ic_placeholder" />
+
+    <Button
+        android:id="@+id/btn_gallery"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:padding="10dp"
+        android:text="@string/gallery_btn"
+        app:layout_constraintEnd_toEndOf="@id/img_story"
+        app:layout_constraintStart_toEndOf="@id/btn_camera"
+        app:layout_constraintTop_toBottomOf="@id/img_story" />
+
+    <Button
+        android:id="@+id/btn_camera"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:padding="10dp"
+        android:text="@string/camera_btn"
+        app:layout_constraintBottom_toTopOf="@id/edt_description"
+        app:layout_constraintEnd_toStartOf="@id/btn_gallery"
+        app:layout_constraintStart_toStartOf="@id/img_story"
+        app:layout_constraintTop_toBottomOf="@id/img_story" />
+
+    <com.jordyf15.storyapp.ui.customview.DescriptionEditText
+        android:id="@+id/edt_description"
+        style="@style/Widget.AppCompat.EditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/edit_text_background"
+        android:gravity="top"
+        android:hint="@string/description_hint"
+        android:inputType="textMultiLine"
+        android:lines="5"
+        android:padding="10dp"
+        app:layout_constraintBottom_toTopOf="@id/btn_upload"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_camera"
+        app:layout_constraintWidth_percent="0.8" />
+
+    <Button
+        android:id="@+id/btn_upload"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="30dp"
+        android:padding="15dp"
+        android:text="@string/upload_btn"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@id/tv_error_msg"
+        app:layout_constraintTop_toBottomOf="@id/edt_description" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@style/Loading"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/edt_description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/edt_description"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tv_error_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textColor="@color/red_error"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_upload"
+        tools:text="@string/error_msg" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Dicoding Story</string>
+    <string name="login_heading">Masuk</string>
+    <string name="register_heading">Daftar Akun</string>
+    <string name="edt_name_label">Nama Lengkap</string>
+    <string name="edt_email_label">Email</string>
+    <string name="edt_password_label">Kata Sandi</string>
+    <string name="edt_name_hint">Nama Lengkap</string>
+    <string name="edt_email_hint">Alamat Email</string>
+    <string name="edt_password_hint">Kata Sandi</string>
+    <string name="register_btn">Daftar</string>
+    <string name="login_btn">Masuk</string>
+    <string name="already_register">Sudah punya akun? </string>
+    <string name="not_yet_register">Belum punya akun?</string>
+    <string name="to_login"><u>Masuk</u></string>
+    <string name="to_register"><u>Daftar</u></string>
+    <string name="error_msg">Terjadi error</string>
+    <string name="password_error">Kata sandi harus minimal 6 karakter</string>
+    <string name="email_error">Harus alamat e-mail yang valid</string>
+    <string name="name_error">Nama Lengkap wajib diisi</string>
+    <string name="description_error">Deskripsi wajib diisi</string>
+    <string name="no_data">Tidak ada story yang tersedia saat ini</string>
+    <string name="list_item_description">Pernahkah Anda mendengar tragedi Darth Plagueis The Wise?</string>
+    <string name="list_item_name">Darth Sidious</string>
+    <string name="list_item_timestamp">3 hari lalu</string>
+    <string name="more_description">%1$s… more</string>
+    <string name="add_story_heading">Tambah Cerita</string>
+    <string name="gallery_btn">Galeri</string>
+    <string name="camera_btn">Kamera</string>
+    <string name="description_hint">Deskripsi</string>
+    <string name="upload_btn">Unggah</string>
+    <string name="no_permission">Tidak mendapat izin</string>
+    <string name="failed_take_picture">Gagal mengambil gambar</string>
+    <string name="failed_camera_open">Gagal membuka kamera</string>
+    <string name="stack_desc">Stories Stack</string>
+    <string name="menu_add_story">Tambah Story</string>
+    <string name="menu_logout">Keluar</string>
+</resources>
