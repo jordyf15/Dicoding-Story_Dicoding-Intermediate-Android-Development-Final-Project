@@ -15,6 +15,7 @@ import com.jordyf15.storyapp.ui.detail.StoryDetailActivity
 import com.jordyf15.storyapp.databinding.ActivityMainBinding
 import com.jordyf15.storyapp.ui.add.AddStoryActivity
 import com.jordyf15.storyapp.ui.login.LoginActivity
+import com.jordyf15.storyapp.ui.register.RegisterActivity
 import com.jordyf15.storyapp.utils.ViewModelFactory
 
 class MainActivity : AppCompatActivity() {
@@ -29,13 +30,6 @@ class MainActivity : AppCompatActivity() {
         viewModelFactory = ViewModelFactory.getInstance(this)
         mainViewModel = viewModelFactory.create(MainViewModel::class.java)
 
-        if (!mainViewModel.isLoggedIn()) {
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
-            finish()
-            return
-        }
-
         mainViewModel.stories.observe(this) {
             if (it.isEmpty()) {
                 binding.tvNoData.visibility = View.VISIBLE
@@ -49,6 +43,13 @@ class MainActivity : AppCompatActivity() {
         }
         mainViewModel.errorResponse.observe(this) {
             binding.tvErrorMsg.text = it.message
+        }
+        mainViewModel.isLoggedIn.observe(this) {
+            if (!it) {
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
         }
 
         mainViewModel.getAllStories()
@@ -69,13 +70,6 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.menu_logout -> {
                 mainViewModel.logout()
-                Log.e("LOGOUT", "sudah clear session")
-                val intent = Intent(this@MainActivity, LoginActivity::class.java)
-                Log.e("LOGOUT", "akan start activity")
-                startActivity(intent)
-                Log.e("LOGOUT", "akan finish current activity")
-//                finish()
-                Log.e("LOGOUT", "finished current activity")
                 true
             }
             else -> true

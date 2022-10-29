@@ -1,6 +1,7 @@
 package com.jordyf15.storyapp.data.local
 
 import android.content.Context
+import android.util.Log
 
 class UserPreference(context: Context) {
     private val preferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)

@@ -14,10 +14,9 @@ class MainViewModel(
     val isLoading: LiveData<Boolean> = storyRepository.mainViewIsLoading
     val errorResponse: LiveData<ErrorResponse> = storyRepository.mainViewErrorResponse
     val stories: LiveData<List<Story>> = storyRepository.listStories
+    val isLoggedIn: LiveData<Boolean> = userRepository.isLoggedIn
 
     fun getAllStories() = storyRepository.getAllStories()
-
-    fun isLoggedIn() = userRepository.isLoggedIn()
 
     fun logout() = userRepository.logout()
 }

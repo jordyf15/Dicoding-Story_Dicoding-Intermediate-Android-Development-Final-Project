@@ -24,20 +24,18 @@ class LoginActivity : AppCompatActivity() {
         viewModelFactory = ViewModelFactory.getInstance(this)
         loginViewModel = viewModelFactory.create(LoginViewModel::class.java)
 
-        if (loginViewModel.isLoggedIn()) {
-            startActivity(Intent(this@LoginActivity, MainActivity::class.java))
-            finish()
-        }
-
         loginViewModel.isLoading.observe(this) {
             showLoading(it)
         }
-        loginViewModel.loginResponse.observe(this) {
-            moveToMainActivity(it.loginResult.token)
+        loginViewModel.isLoggedIn.observe(this) {
+            if (it) {
+                moveToMainActivity()
+            }
         }
         loginViewModel.errorResponse.observe(this) {
             binding.tvErrorMsg.text = it.message
         }
+
         binding.loginBtn.isEnabled = false
         binding.tvToRegister.setOnClickListener {
             moveToRegisterActivity()
@@ -51,6 +49,7 @@ class LoginActivity : AppCompatActivity() {
         binding.edtPassword.addTextChangedListener {
             validateForm()
         }
+
         playAnimation()
     }
 
@@ -95,7 +94,7 @@ class LoginActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun moveToMainActivity(token: String) {
+    private fun moveToMainActivity() {
         val intent = Intent(this@LoginActivity, MainActivity::class.java)
         startActivity(intent)
         finishAffinity()

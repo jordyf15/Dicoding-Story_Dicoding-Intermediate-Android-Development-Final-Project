@@ -30,6 +30,14 @@ class StoryDetailActivity : AppCompatActivity() {
         viewModelFactory = ViewModelFactory.getInstance(this)
         storyDetailViewModel = viewModelFactory.create(StoryDetailViewModel::class.java)
 
+        storyDetailViewModel.isLoggedIn.observe(this) {
+            if (!it) {
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+        }
+
         val story = intent.getParcelableExtra<Story>(EXTRA_STORY) as Story
 
         binding.tvName.text = story.name
@@ -55,9 +63,6 @@ class StoryDetailActivity : AppCompatActivity() {
             }
             R.id.menu_logout -> {
                 storyDetailViewModel.logout()
-                val intent = Intent(this@StoryDetailActivity, LoginActivity::class.java)
-                startActivity(intent)
-                finish()
                 true
             }
             else -> true

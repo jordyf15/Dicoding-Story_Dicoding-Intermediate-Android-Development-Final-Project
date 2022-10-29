@@ -22,12 +22,12 @@ class UserRepository private constructor(
     val loginResponse = MutableLiveData<LoginResponse>()
     val loginViewErrorResponse = MutableLiveData<ErrorResponse>()
     val loginViewIsLoading = MutableLiveData<Boolean>()
+    val isLoggedIn = MutableLiveData(userPreference.isLogin())
 
-    fun isLoggedIn(): Boolean = userPreference.isLogin()
-
-    fun logout() = userPreference.clearSession()
-
-
+    fun logout() {
+        isLoggedIn.value = false
+        userPreference.clearSession()
+    }
 
     fun login(email: String, password: String) {
         loginViewIsLoading.value = true
@@ -37,6 +37,7 @@ class UserRepository private constructor(
                 loginViewIsLoading.value = false
                 if (response.isSuccessful) {
                     loginResponse.value = response.body()
+                    isLoggedIn.value = true
                     response.body()?.loginResult?.let { userPreference.saveSession(it.token) }
                 } else {
                     loginViewErrorResponse.value = Gson().fromJson(
