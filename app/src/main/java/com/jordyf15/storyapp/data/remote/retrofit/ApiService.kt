@@ -27,7 +27,17 @@ interface ApiService {
 
     @Multipart
     @POST("stories")
-    fun addNewStory(
+    fun addNewStoryWithLocation(
+        @Header("Authorization") token: String,
+        @Part("description") description: RequestBody,
+        @Part("lat") lat: RequestBody,
+        @Part("lon") lon: RequestBody,
+        @Part file: MultipartBody.Part,
+    ): Call<AddStoryResponse>
+
+    @Multipart
+    @POST("stories")
+    fun addNewStoryWithoutLocation(
         @Header("Authorization") token: String,
         @Part("description") description: RequestBody,
         @Part file: MultipartBody.Part,
@@ -35,6 +45,11 @@ interface ApiService {
 
     @GET("stories")
     fun getAllStories(
+        @Header("Authorization") token: String,
+    ): Call<GetAllStoryResponse>
+
+    @GET("stories?location=1")
+    fun getStoryLocations(
         @Header("Authorization") token: String,
     ): Call<GetAllStoryResponse>
 }

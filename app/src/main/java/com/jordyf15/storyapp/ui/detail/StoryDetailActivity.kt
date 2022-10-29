@@ -11,6 +11,7 @@ import com.jordyf15.storyapp.data.remote.response.Story
 import com.jordyf15.storyapp.databinding.ActivityStoryDetailBinding
 import com.jordyf15.storyapp.ui.add.AddStoryActivity
 import com.jordyf15.storyapp.ui.login.LoginActivity
+import com.jordyf15.storyapp.ui.map.MapsActivity
 import com.jordyf15.storyapp.utils.Utils
 import com.jordyf15.storyapp.utils.ViewModelFactory
 
@@ -63,6 +64,11 @@ class StoryDetailActivity : AppCompatActivity() {
             }
             R.id.menu_logout -> {
                 storyDetailViewModel.logout()
+                true
+            }
+            R.id.menu_map -> {
+                val intent = Intent(this@StoryDetailActivity, MapsActivity::class.java)
+                startActivity(intent)
                 true
             }
             else -> true

@@ -8,12 +8,15 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.jordyf15.storyapp.ui.camera.CameraActivity
 import com.jordyf15.storyapp.ui.main.MainActivity
 import com.jordyf15.storyapp.R
@@ -25,8 +28,11 @@ import java.io.File
 class AddStoryActivity : AppCompatActivity() {
     private var getFile: File? = null
     private lateinit var binding: ActivityAddStoryBinding
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var viewModelFactory: ViewModelFactory
     private lateinit var addStoryViewModel: AddStoryViewModel
+    private var currentLatitude: Float? = null
+    private var currentLongitude: Float? = null
 
     companion object {
         const val CAMERA_X_RESULT = 200
@@ -76,15 +82,19 @@ class AddStoryActivity : AppCompatActivity() {
         }
         binding.btnUpload.setOnClickListener {
             if (getFile != null) {
+                Log.e("ADD_STORY", currentLatitude.toString()+currentLongitude.toString())
                 val file: File = getFile as File
                 val description = binding.edtDescription.text.toString()
-                addStoryViewModel.addStory(file, description)
+                addStoryViewModel.addStory(file, description, currentLatitude, currentLongitude)
             }
         }
 
         binding.edtDescription.addTextChangedListener {
             validateForm()
         }
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        getMyLocation()
     }
 
     override fun onRequestPermissionsResult(
@@ -161,5 +171,28 @@ class AddStoryActivity : AppCompatActivity() {
     private fun validateForm() {
         binding.btnUpload.isEnabled =
             binding.edtDescription.text.toString().isNotEmpty() && getFile != null
+    }
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            getMyLocation()
+        }
+    }
+
+    private fun getMyLocation() {
+        if (ContextCompat.checkSelfPermission(
+                this.applicationContext,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                currentLatitude = location.latitude.toFloat()
+                currentLongitude = location.longitude.toFloat()
+            }
+        } else {
+            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
     }
 }

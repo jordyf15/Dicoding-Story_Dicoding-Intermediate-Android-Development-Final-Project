@@ -25,10 +25,14 @@ class StoryRepository private constructor(
     val mainViewErrorResponse = MutableLiveData<ErrorResponse>()
     val addViewErrorResponse = MutableLiveData<ErrorResponse>()
     val addViewIsLoading = MutableLiveData<Boolean>()
+    val mapViewIsLoading = MutableLiveData<Boolean>()
+    val mapViewErrorResponse = MutableLiveData<ErrorResponse>()
+    val listStoryWithLocations = MutableLiveData<List<Story>>()
     val finishAddStory = MutableLiveData(false)
 
-    fun addStory(storyImg: File, description: String) {
+    fun addStory(storyImg: File, description: String, latitude: Float?, longitude: Float?) {
         addViewIsLoading.value = true
+        val client: Call<AddStoryResponse>
         val desc = description.toRequestBody("text/plain".toMediaType())
         val requestImageFile = storyImg.asRequestBody("image/jpeg".toMediaTypeOrNull())
         val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
@@ -37,7 +41,15 @@ class StoryRepository private constructor(
             requestImageFile
         )
         val accessToken = "Bearer ${userPreference.getToken()}"
-        val client = apiService.addNewStory(accessToken, desc, imageMultipart)
+
+        client = if (latitude != null && longitude != null) {
+            val lat = latitude.toString().toRequestBody("text/plain".toMediaType())
+            val lon = longitude.toString().toRequestBody("text/plain".toMediaType())
+            apiService.addNewStoryWithLocation(accessToken, desc, lat, lon, imageMultipart)
+        } else {
+            apiService.addNewStoryWithoutLocation(accessToken, desc, imageMultipart)
+        }
+
         client.enqueue(object : Callback<AddStoryResponse> {
             override fun onResponse(
                 call: Call<AddStoryResponse>,
@@ -65,6 +77,37 @@ class StoryRepository private constructor(
 
     fun resetAddStory() {
         finishAddStory.value = false
+    }
+
+    fun getAllStoryLocations() {
+        mapViewIsLoading.value = true
+        val accessToken = "Bearer ${userPreference.getToken()}"
+        val client = apiService.getStoryLocations(accessToken)
+        client.enqueue(object : Callback<GetAllStoryResponse> {
+            override fun onResponse(
+                call: Call<GetAllStoryResponse>,
+                response: Response<GetAllStoryResponse>
+            ) {
+                mapViewIsLoading.value = false
+                if (response.isSuccessful) {
+                    listStoryWithLocations.value = response.body()?.listStory
+                } else {
+                    mapViewErrorResponse.value = Gson().fromJson(
+                        response.errorBody()?.charStream(),
+                        ErrorResponse::class.java
+                    )
+                    response.errorBody()?.let {
+                        Log.e(TAG, "onFailure: ${it.string()}")
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<GetAllStoryResponse>, t: Throwable) {
+                mapViewIsLoading.value = false
+                Log.e(TAG, "onFailure: ${t.message.toString()}")
+                mapViewErrorResponse.value = ErrorResponse(true, t.message.toString())
+            }
+        })
     }
 
     fun getAllStories() {

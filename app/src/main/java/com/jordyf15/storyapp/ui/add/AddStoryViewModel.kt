@@ -13,8 +13,8 @@ class AddStoryViewModel(
     val isLoading: LiveData<Boolean> = storyRepository.addViewIsLoading
     val finishAddStory: LiveData<Boolean> = storyRepository.finishAddStory
 
-    fun addStory(storyImg: File, description: String) =
-        storyRepository.addStory(storyImg, description)
+    fun addStory(storyImg: File, description: String, latitude: Float?, longitude: Float?) =
+        storyRepository.addStory(storyImg, description, latitude, longitude)
 
     fun resetAddStory() = storyRepository.resetAddStory()
 }

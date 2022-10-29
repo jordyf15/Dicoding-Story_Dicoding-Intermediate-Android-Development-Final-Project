@@ -4,6 +4,11 @@
 
     <group android:menuCategory="container">
         <item
+            android:id="@+id/menu_map"
+            android:icon="@drawable/ic_map"
+            android:title="@string/map"
+            app:showAsAction="always" />
+        <item
             android:id="@+id/menu_add_story"
             android:icon="@drawable/ic_add_story"
             android:title="@string/menu_add_story"

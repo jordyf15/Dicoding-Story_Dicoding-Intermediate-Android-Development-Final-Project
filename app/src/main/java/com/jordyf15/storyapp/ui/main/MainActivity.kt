@@ -3,7 +3,6 @@ package com.jordyf15.storyapp.ui.main
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -15,7 +14,7 @@ import com.jordyf15.storyapp.ui.detail.StoryDetailActivity
 import com.jordyf15.storyapp.databinding.ActivityMainBinding
 import com.jordyf15.storyapp.ui.add.AddStoryActivity
 import com.jordyf15.storyapp.ui.login.LoginActivity
-import com.jordyf15.storyapp.ui.register.RegisterActivity
+import com.jordyf15.storyapp.ui.map.MapsActivity
 import com.jordyf15.storyapp.utils.ViewModelFactory
 
 class MainActivity : AppCompatActivity() {
@@ -70,6 +69,11 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.menu_logout -> {
                 mainViewModel.logout()
+                true
+            }
+            R.id.menu_map -> {
+                val intent = Intent(this@MainActivity, MapsActivity::class.java)
+                startActivity(intent)
                 true
             }
             else -> true

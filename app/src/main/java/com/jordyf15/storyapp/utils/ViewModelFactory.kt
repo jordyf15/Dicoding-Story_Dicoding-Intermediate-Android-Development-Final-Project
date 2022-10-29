@@ -10,6 +10,7 @@ import com.jordyf15.storyapp.ui.add.AddStoryViewModel
 import com.jordyf15.storyapp.ui.detail.StoryDetailViewModel
 import com.jordyf15.storyapp.ui.login.LoginViewModel
 import com.jordyf15.storyapp.ui.main.MainViewModel
+import com.jordyf15.storyapp.ui.map.MapViewModel
 import com.jordyf15.storyapp.ui.register.RegisterViewModel
 
 class ViewModelFactory private constructor(
@@ -28,6 +29,8 @@ class ViewModelFactory private constructor(
             return AddStoryViewModel(storyRepository) as T
         } else if (modelClass.isAssignableFrom(StoryDetailViewModel::class.java)) {
             return StoryDetailViewModel(userRepository) as T
+        } else if (modelClass.isAssignableFrom(MapViewModel::class.java)) {
+            return MapViewModel(storyRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }
