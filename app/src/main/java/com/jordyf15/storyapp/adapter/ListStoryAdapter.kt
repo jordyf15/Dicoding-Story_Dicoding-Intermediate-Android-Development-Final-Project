@@ -1,10 +1,12 @@
-package com.jordyf15.storyapp.ui.main
+package com.jordyf15.storyapp.adapter
 
 import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.jordyf15.storyapp.R
@@ -12,8 +14,7 @@ import com.jordyf15.storyapp.data.remote.response.Story
 import com.jordyf15.storyapp.databinding.ItemRowStoryBinding
 import com.jordyf15.storyapp.utils.Utils
 
-class ListStoryAdapter(private val listStory: List<Story>) :
-    RecyclerView.Adapter<ListStoryAdapter.ListViewHolder>() {
+class ListStoryAdapter : PagingDataAdapter<Story, ListStoryAdapter.ListViewHolder>(DIFF_CALLBACK) {
     private lateinit var onItemClickCallback: OnItemClickCallback
 
     fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback) {
@@ -29,7 +30,8 @@ class ListStoryAdapter(private val listStory: List<Story>) :
     }
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-        val story = listStory[position]
+        val story = getItem(position) ?: return
+
         holder.binding.tvItemName.text = story.name
         if (story.description.length > 80) {
             holder.binding.tvItemDescription.text = holder.itemView.context.getString(
@@ -54,13 +56,24 @@ class ListStoryAdapter(private val listStory: List<Story>) :
                     Pair(holder.binding.imgProfilePic, "profilePicture"),
                     Pair(holder.binding.imgItemPhoto, "photo")
                 )
-            onItemClickCallback.onItemClicked(listStory[holder.adapterPosition], optionsCompat)
+            onItemClickCallback.onItemClicked(story, optionsCompat)
         }
     }
 
-    override fun getItemCount() = listStory.size
-
     interface OnItemClickCallback {
         fun onItemClicked(data: Story, optionsCompat: ActivityOptionsCompat)
+    }
+
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Story>() {
+            override fun areItemsTheSame(oldItem: Story, newItem: Story): Boolean {
+                return oldItem == newItem
+            }
+
+            override fun areContentsTheSame(oldItem: Story, newItem: Story): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+        }
     }
 }

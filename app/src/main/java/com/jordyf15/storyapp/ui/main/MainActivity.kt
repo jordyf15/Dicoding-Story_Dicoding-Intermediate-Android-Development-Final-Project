@@ -5,10 +5,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import androidx.core.app.ActivityOptionsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jordyf15.storyapp.R
+import com.jordyf15.storyapp.adapter.ListStoryAdapter
+import com.jordyf15.storyapp.adapter.LoadingStateAdapter
 import com.jordyf15.storyapp.data.remote.response.Story
 import com.jordyf15.storyapp.ui.detail.StoryDetailActivity
 import com.jordyf15.storyapp.databinding.ActivityMainBinding
@@ -29,20 +30,6 @@ class MainActivity : AppCompatActivity() {
         viewModelFactory = ViewModelFactory.getInstance(this)
         mainViewModel = viewModelFactory.create(MainViewModel::class.java)
 
-        mainViewModel.stories.observe(this) {
-            if (it.isEmpty()) {
-                binding.tvNoData.visibility = View.VISIBLE
-            } else {
-                binding.tvNoData.visibility = View.GONE
-                showRecyclerList(it)
-            }
-        }
-        mainViewModel.isLoading.observe(this) {
-            showLoading(it)
-        }
-        mainViewModel.errorResponse.observe(this) {
-            binding.tvErrorMsg.text = it.message
-        }
         mainViewModel.isLoggedIn.observe(this) {
             if (!it) {
                 val intent = Intent(this, LoginActivity::class.java)
@@ -51,7 +38,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        mainViewModel.getAllStories()
+        binding.rvStories.layoutManager = LinearLayoutManager(this)
+
+        getData()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -80,14 +69,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun showLoading(isLoading: Boolean) {
-        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-    }
-
-    private fun showRecyclerList(stories: List<Story>) {
-        binding.rvStories.layoutManager = LinearLayoutManager(this)
-        val listStoryAdapter = ListStoryAdapter(stories)
-        binding.rvStories.adapter = listStoryAdapter
+    private fun getData() {
+        val listStoryAdapter = ListStoryAdapter()
+        binding.rvStories.adapter = listStoryAdapter.withLoadStateFooter(
+            footer = LoadingStateAdapter{
+                listStoryAdapter.retry()
+            }
+        )
+        mainViewModel.stories.observe(this) {
+            listStoryAdapter.submitData(lifecycle, it)
+        }
 
         listStoryAdapter.setOnItemClickCallback(object : ListStoryAdapter.OnItemClickCallback {
             override fun onItemClicked(data: Story, optionsCompat: ActivityOptionsCompat) {

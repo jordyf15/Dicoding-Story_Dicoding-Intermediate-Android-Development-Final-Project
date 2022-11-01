@@ -1,9 +1,6 @@
 package com.jordyf15.storyapp.data.remote.retrofit
 
-import com.jordyf15.storyapp.data.remote.response.AddStoryResponse
-import com.jordyf15.storyapp.data.remote.response.GetAllStoryResponse
-import com.jordyf15.storyapp.data.remote.response.LoginResponse
-import com.jordyf15.storyapp.data.remote.response.RegisterResponse
+import com.jordyf15.storyapp.data.remote.response.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -44,12 +41,16 @@ interface ApiService {
     ): Call<AddStoryResponse>
 
     @GET("stories")
-    fun getAllStories(
+    suspend fun getStories(
         @Header("Authorization") token: String,
-    ): Call<GetAllStoryResponse>
+        @Query("location") location: Int,
+        @Query("page") page: Int?,
+        @Query("size") size: Int?
+    ): GetAllStoryResponse
 
-    @GET("stories?location=1")
-    fun getStoryLocations(
+    @GET("stories")
+    fun getStoryWithLocations(
         @Header("Authorization") token: String,
+        @Query("location") location: Int,
     ): Call<GetAllStoryResponse>
 }

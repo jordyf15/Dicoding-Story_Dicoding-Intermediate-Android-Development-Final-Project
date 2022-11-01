@@ -2,6 +2,9 @@ package com.jordyf15.storyapp.ui.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.jordyf15.storyapp.data.StoryRepository
 import com.jordyf15.storyapp.data.UserRepository
 import com.jordyf15.storyapp.data.remote.response.ErrorResponse
@@ -11,12 +14,9 @@ class MainViewModel(
     private val storyRepository: StoryRepository,
     private val userRepository: UserRepository
 ) : ViewModel() {
-    val isLoading: LiveData<Boolean> = storyRepository.mainViewIsLoading
     val errorResponse: LiveData<ErrorResponse> = storyRepository.mainViewErrorResponse
-    val stories: LiveData<List<Story>> = storyRepository.listStories
+    val stories: LiveData<PagingData<Story>> = storyRepository.getStories().cachedIn(viewModelScope)
     val isLoggedIn: LiveData<Boolean> = userRepository.isLoggedIn
-
-    fun getAllStories() = storyRepository.getAllStories()
 
     fun logout() = userRepository.logout()
 }

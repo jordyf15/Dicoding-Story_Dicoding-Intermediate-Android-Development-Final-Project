@@ -3,7 +3,7 @@ package com.jordyf15.storyapp.data
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
-import com.jordyf15.storyapp.data.local.UserPreference
+import com.jordyf15.storyapp.data.local.preference.UserPreference
 import com.jordyf15.storyapp.data.remote.response.ErrorResponse
 import com.jordyf15.storyapp.data.remote.response.LoginResponse
 import com.jordyf15.storyapp.data.remote.response.RegisterResponse

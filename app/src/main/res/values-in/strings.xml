@@ -36,4 +36,7 @@
     <string name="stack_desc">Stories Stack</string>
     <string name="menu_add_story">Tambah Story</string>
     <string name="menu_logout">Keluar</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="map">Peta</string>
+    <string name="retry">Coba lagi</string>
 </resources>

@@ -1,9 +1,12 @@
 package com.jordyf15.storyapp.data
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.paging.*
 import com.google.gson.Gson
-import com.jordyf15.storyapp.data.local.UserPreference
+import com.jordyf15.storyapp.data.local.preference.UserPreference
+import com.jordyf15.storyapp.data.local.room.StoryDatabase
 import com.jordyf15.storyapp.data.remote.response.*
 import com.jordyf15.storyapp.data.remote.retrofit.ApiService
 import okhttp3.MediaType.Companion.toMediaType
@@ -18,9 +21,9 @@ import java.io.File
 
 class StoryRepository private constructor(
     private val apiService: ApiService,
-    private val userPreference: UserPreference
+    private val userPreference: UserPreference,
+    private val storyDatabase: StoryDatabase
 ) {
-    val listStories = MutableLiveData<List<Story>>()
     val mainViewIsLoading = MutableLiveData<Boolean>()
     val mainViewErrorResponse = MutableLiveData<ErrorResponse>()
     val addViewErrorResponse = MutableLiveData<ErrorResponse>()
@@ -79,10 +82,10 @@ class StoryRepository private constructor(
         finishAddStory.value = false
     }
 
-    fun getAllStoryLocations() {
+    fun getAllStoryWithLocations() {
         mapViewIsLoading.value = true
         val accessToken = "Bearer ${userPreference.getToken()}"
-        val client = apiService.getStoryLocations(accessToken)
+        val client = apiService.getStoryWithLocations(accessToken, 1)
         client.enqueue(object : Callback<GetAllStoryResponse> {
             override fun onResponse(
                 call: Call<GetAllStoryResponse>,
@@ -110,35 +113,18 @@ class StoryRepository private constructor(
         })
     }
 
-    fun getAllStories() {
-        mainViewIsLoading.value = true
+    @OptIn(ExperimentalPagingApi::class)
+    fun getStories(): LiveData<PagingData<Story>> {
         val accessToken = "Bearer ${userPreference.getToken()}"
-        val client = apiService.getAllStories(accessToken)
-        client.enqueue(object : Callback<GetAllStoryResponse> {
-            override fun onResponse(
-                call: Call<GetAllStoryResponse>,
-                response: Response<GetAllStoryResponse>
-            ) {
-                mainViewIsLoading.value = false
-                if (response.isSuccessful) {
-                    listStories.value = response.body()?.listStory
-                } else {
-                    mainViewErrorResponse.value = Gson().fromJson(
-                        response.errorBody()?.charStream(),
-                        ErrorResponse::class.java
-                    )
-                    response.errorBody()?.let {
-                        Log.e(TAG, "onFailure: ${it.string()}")
-                    }
-                }
+        return Pager(
+            config = PagingConfig(
+                pageSize = 5
+            ),
+            remoteMediator = StoryRemoteMediator(storyDatabase, apiService, accessToken),
+            pagingSourceFactory = {
+                storyDatabase.storyDao().getAllStory()
             }
-
-            override fun onFailure(call: Call<GetAllStoryResponse>, t: Throwable) {
-                mainViewIsLoading.value = false
-                Log.e(TAG, "onFailure: ${t.message.toString()}")
-                mainViewErrorResponse.value = ErrorResponse(true, t.message.toString())
-            }
-        })
+        ).liveData
     }
 
     companion object {
@@ -148,10 +134,11 @@ class StoryRepository private constructor(
         private var instance: StoryRepository? = null
         fun getInstance(
             apiService: ApiService,
-            userPreference: UserPreference
+            userPreference: UserPreference,
+            storyDatabase: StoryDatabase
         ): StoryRepository =
             instance ?: synchronized(this) {
-                instance ?: StoryRepository(apiService, userPreference)
+                instance ?: StoryRepository(apiService, userPreference, storyDatabase)
             }.also { instance = it }
     }
 }

@@ -76,7 +76,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.uiSettings.isCompassEnabled = true
         mMap.uiSettings.isMapToolbarEnabled = true
 
-        mapViewModel.getAllStoryLocations()
+        mapViewModel.getAllStoryWithLocations()
 
         getMyLocation()
         setMapStyle()
