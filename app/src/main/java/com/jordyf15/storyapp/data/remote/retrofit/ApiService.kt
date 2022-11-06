@@ -9,36 +9,36 @@ import retrofit2.http.*
 interface ApiService {
     @FormUrlEncoded
     @POST("register")
-    fun register(
+    suspend fun register(
         @Field("name") name: String,
         @Field("email") email: String,
         @Field("password") password: String
-    ): Call<RegisterResponse>
+    ): RegisterResponse
 
     @FormUrlEncoded
     @POST("login")
-    fun login(
+    suspend fun login(
         @Field("email") email: String,
         @Field("password") password: String
-    ): Call<LoginResponse>
+    ): LoginResponse
 
     @Multipart
     @POST("stories")
-    fun addNewStoryWithLocation(
+    suspend fun addNewStoryWithLocation(
         @Header("Authorization") token: String,
         @Part("description") description: RequestBody,
         @Part("lat") lat: RequestBody,
         @Part("lon") lon: RequestBody,
         @Part file: MultipartBody.Part,
-    ): Call<AddStoryResponse>
+    ): AddStoryResponse
 
     @Multipart
     @POST("stories")
-    fun addNewStoryWithoutLocation(
+    suspend fun addNewStoryWithoutLocation(
         @Header("Authorization") token: String,
         @Part("description") description: RequestBody,
         @Part file: MultipartBody.Part,
-    ): Call<AddStoryResponse>
+    ): AddStoryResponse
 
     @GET("stories")
     suspend fun getStories(
@@ -49,8 +49,8 @@ interface ApiService {
     ): GetAllStoryResponse
 
     @GET("stories")
-    fun getStoryWithLocations(
+    suspend fun getStoryWithLocations(
         @Header("Authorization") token: String,
         @Query("location") location: Int,
-    ): Call<GetAllStoryResponse>
+    ): GetAllStoryResponse
 }

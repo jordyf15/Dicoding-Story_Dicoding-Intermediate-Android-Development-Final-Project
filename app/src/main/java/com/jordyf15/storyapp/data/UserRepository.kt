@@ -1,27 +1,21 @@
 package com.jordyf15.storyapp.data
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.liveData
 import com.google.gson.Gson
 import com.jordyf15.storyapp.data.local.preference.UserPreference
 import com.jordyf15.storyapp.data.remote.response.ErrorResponse
 import com.jordyf15.storyapp.data.remote.response.LoginResponse
 import com.jordyf15.storyapp.data.remote.response.RegisterResponse
 import com.jordyf15.storyapp.data.remote.retrofit.ApiService
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import retrofit2.HttpException
 
 class UserRepository private constructor(
     private val apiService: ApiService,
     private val userPreference: UserPreference
 ) {
-    val registerResponse = MutableLiveData<RegisterResponse>()
-    val registerViewErrorResponse = MutableLiveData<ErrorResponse>()
-    val registerViewIsLoading = MutableLiveData<Boolean>()
-    val loginResponse = MutableLiveData<LoginResponse>()
-    val loginViewErrorResponse = MutableLiveData<ErrorResponse>()
-    val loginViewIsLoading = MutableLiveData<Boolean>()
     val isLoggedIn = MutableLiveData(userPreference.isLogin())
 
     fun logout() {
@@ -29,59 +23,66 @@ class UserRepository private constructor(
         userPreference.clearSession()
     }
 
-    fun login(email: String, password: String) {
-        loginViewIsLoading.value = true
-        val client = apiService.login(email, password)
-        client.enqueue(object : Callback<LoginResponse> {
-            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
-                loginViewIsLoading.value = false
-                if (response.isSuccessful) {
-                    loginResponse.value = response.body()
-                    isLoggedIn.value = true
-                    response.body()?.loginResult?.let { userPreference.saveSession(it.token) }
-                } else {
-                    loginViewErrorResponse.value = Gson().fromJson(
-                        response.errorBody()?.charStream(),
-                        ErrorResponse::class.java
-                    )
-                    response.errorBody()?.let {
-                        Log.e(TAG, "onFailure: ${it.string()}")
+    fun login(email: String, password: String): LiveData<Result<LoginResponse>> = liveData {
+        emit(Result.Loading)
+        try {
+            val response = apiService.login(email, password)
+            isLoggedIn.value = true
+            userPreference.saveSession(response.loginResult.token)
+            emit(Result.Success(response))
+        } catch (t: Throwable) {
+            when (t) {
+                is HttpException -> {
+                    try {
+                        val errResponse = Gson().fromJson(
+                            t.response()?.errorBody()?.charStream(),
+                            ErrorResponse::class.java
+                        )
+                        Log.e(TAG, "onFailure: ${errResponse.message}")
+                        emit(Result.Error(errResponse.message))
+                    } catch (e: Exception) {
+                        Log.e(TAG, "onFailure: ${e.message.toString()}")
+                        emit(Result.Error(e.message.toString()))
                     }
                 }
-            }
-
-            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                loginViewIsLoading.value = false
-                Log.e(TAG, "onFailure: ${t.message.toString()}")
-                loginViewErrorResponse.value = ErrorResponse(true, t.message.toString())
-            }
-        })
-    }
-
-    fun register(name: String, email: String, password: String) {
-        registerViewIsLoading.value = true
-        val client = apiService.register(name, email, password)
-        client.enqueue(object : Callback<RegisterResponse> {
-            override fun onResponse(
-                call: Call<RegisterResponse>,
-                res: Response<RegisterResponse>
-            ) {
-                registerViewIsLoading.value = false
-                if (res.isSuccessful) {
-                    registerResponse.value = res.body()
-                } else {
-                    registerViewErrorResponse.value =
-                        Gson().fromJson(res.errorBody()?.charStream(), ErrorResponse::class.java)
-                    res.errorBody()?.let { Log.e(TAG, it.string()) }
+                else -> {
+                    Log.e(TAG, "onFailure: ${t.message.toString()}")
+                    emit(Result.Error(t.message.toString()))
                 }
             }
+        }
+    }
 
-            override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
-                registerViewIsLoading.value = false
-                Log.e(TAG, "onFailure: ${t.message.toString()}")
-                registerViewErrorResponse.value = ErrorResponse(true, t.message.toString())
+    fun register(
+        name: String,
+        email: String,
+        password: String
+    ): LiveData<Result<RegisterResponse>> = liveData {
+        emit(Result.Loading)
+        try {
+            val response = apiService.register(name, email, password)
+            emit(Result.Success(response))
+        } catch (t: Throwable) {
+            when (t) {
+                is HttpException -> {
+                    try {
+                        val errResponse = Gson().fromJson(
+                            t.response()?.errorBody()?.charStream(),
+                            ErrorResponse::class.java
+                        )
+                        Log.e(TAG, "onFailure: ${errResponse.message}")
+                        emit(Result.Error(errResponse.message))
+                    } catch (e: Exception) {
+                        Log.e(TAG, "onFailure: ${e.message.toString()}")
+                        emit(Result.Error(e.message.toString()))
+                    }
+                }
+                else -> {
+                    Log.e(TAG, "onFailure: ${t.message.toString()}")
+                    emit(Result.Error(t.message.toString()))
+                }
             }
-        })
+        }
     }
 
     companion object {

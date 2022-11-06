@@ -6,7 +6,6 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import com.jordyf15.storyapp.data.local.room.RemoteKeys
-import com.jordyf15.storyapp.data.local.room.RemoteKeysDao
 import com.jordyf15.storyapp.data.local.room.StoryDatabase
 import com.jordyf15.storyapp.data.remote.response.Story
 import com.jordyf15.storyapp.data.remote.retrofit.ApiService

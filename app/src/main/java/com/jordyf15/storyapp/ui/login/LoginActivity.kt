@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.widget.addTextChangedListener
 import com.jordyf15.storyapp.ui.main.MainActivity
+import com.jordyf15.storyapp.data.Result
 import com.jordyf15.storyapp.ui.register.RegisterActivity
 import com.jordyf15.storyapp.databinding.ActivityLoginBinding
 import com.jordyf15.storyapp.utils.ViewModelFactory
@@ -24,16 +25,10 @@ class LoginActivity : AppCompatActivity() {
         viewModelFactory = ViewModelFactory.getInstance(this)
         loginViewModel = viewModelFactory.create(LoginViewModel::class.java)
 
-        loginViewModel.isLoading.observe(this) {
-            showLoading(it)
-        }
         loginViewModel.isLoggedIn.observe(this) {
             if (it) {
                 moveToMainActivity()
             }
-        }
-        loginViewModel.errorResponse.observe(this) {
-            binding.tvErrorMsg.text = it.message
         }
 
         binding.loginBtn.isEnabled = false
@@ -85,10 +80,6 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun showLoading(isLoading: Boolean) {
-        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-    }
-
     private fun moveToRegisterActivity() {
         val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
         startActivity(intent)
@@ -109,6 +100,23 @@ class LoginActivity : AppCompatActivity() {
     private fun login() {
         val email = binding.edtEmail.text.toString()
         val password = binding.edtPassword.text.toString()
-        loginViewModel.login(email, password)
+        loginViewModel.login(email, password).observe(this) { result->
+            if(result != null) {
+                when (result) {
+                    is Result.Loading -> {
+                        binding.progressBar.visibility= View.VISIBLE
+                    }
+                    is Result.Success -> {
+                        binding.progressBar.visibility = View.GONE
+                        binding.tvErrorMsg.text = ""
+                        moveToMainActivity()
+                    }
+                    is Result.Error -> {
+                        binding.progressBar.visibility = View.GONE
+                        binding.tvErrorMsg.text = result.error
+                    }
+                }
+            }
+        }
     }
 }

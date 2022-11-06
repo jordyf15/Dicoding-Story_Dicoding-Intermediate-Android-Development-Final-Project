@@ -20,6 +20,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import com.jordyf15.storyapp.R
+import com.jordyf15.storyapp.data.Result
 import com.jordyf15.storyapp.data.remote.response.Story
 import com.jordyf15.storyapp.databinding.ActivityMapsBinding
 import com.jordyf15.storyapp.utils.ViewModelFactory
@@ -42,20 +43,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         viewModelFactory = ViewModelFactory.getInstance(this)
         mapViewModel = viewModelFactory.create(MapViewModel::class.java)
 
-        mapViewModel.isLoading.observe(this) {
-            showLoading(it)
-        }
-
-        mapViewModel.errorResponse.observe(this) {
-            binding.tvErrorMsg.text = it.message
-        }
-
-        mapViewModel.stories.observe(this) {
-            if (isMapReady) {
-                renderLocationMarkers(it)
-            }
-        }
-
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         val mapFragment = supportFragmentManager
@@ -76,14 +63,34 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.uiSettings.isCompassEnabled = true
         mMap.uiSettings.isMapToolbarEnabled = true
 
-        mapViewModel.getAllStoryWithLocations()
+        mapViewModel.getAllStoryWithLocations().observe(this) { result->
+            if (result != null) {
+                when (result) {
+                    is Result.Loading -> {
+                        binding.progressBar.visibility = View.VISIBLE
+                    }
+                    is Result.Success -> {
+                        Log.e(TAG, "get story locations success")
+                        binding.progressBar.visibility = View.GONE
+                        binding.tvErrorMsg.text = ""
+                        val stories = result.data.listStory
+                        stories.forEach {
+                            Log.e(TAG, it.name)
+                        }
+                        if (isMapReady) {
+                            renderLocationMarkers(stories)
+                        }
+                    }
+                    is Result.Error -> {
+                        binding.progressBar.visibility = View.GONE
+                        binding.tvErrorMsg.text = result.error
+                    }
+                }
+            }
+        }
 
         getMyLocation()
         setMapStyle()
-    }
-
-    private fun showLoading(isLoading: Boolean) {
-        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
     private fun renderLocationMarkers(stories: List<Story>) {

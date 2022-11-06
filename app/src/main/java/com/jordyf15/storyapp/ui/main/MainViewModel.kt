@@ -14,8 +14,9 @@ class MainViewModel(
     private val storyRepository: StoryRepository,
     private val userRepository: UserRepository
 ) : ViewModel() {
-    val errorResponse: LiveData<ErrorResponse> = storyRepository.mainViewErrorResponse
-    val stories: LiveData<PagingData<Story>> = storyRepository.getStories().cachedIn(viewModelScope)
+    val stories: LiveData<PagingData<Story>> by lazy {
+        storyRepository.getStories().cachedIn(viewModelScope)
+    }
     val isLoggedIn: LiveData<Boolean> = userRepository.isLoggedIn
 
     fun logout() = userRepository.logout()

@@ -9,9 +9,5 @@ import com.jordyf15.storyapp.data.remote.response.Story
 class MapViewModel(
     private val storyRepository: StoryRepository
 ) : ViewModel() {
-    val isLoading: LiveData<Boolean> = storyRepository.mapViewIsLoading
-    val errorResponse: LiveData<ErrorResponse> = storyRepository.mapViewErrorResponse
-    val stories: LiveData<List<Story>> = storyRepository.listStoryWithLocations
-
     fun getAllStoryWithLocations() = storyRepository.getAllStoryWithLocations()
 }

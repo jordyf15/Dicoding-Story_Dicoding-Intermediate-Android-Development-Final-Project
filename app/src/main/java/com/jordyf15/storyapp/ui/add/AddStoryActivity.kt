@@ -20,6 +20,7 @@ import com.google.android.gms.location.LocationServices
 import com.jordyf15.storyapp.ui.camera.CameraActivity
 import com.jordyf15.storyapp.ui.main.MainActivity
 import com.jordyf15.storyapp.R
+import com.jordyf15.storyapp.data.Result
 import com.jordyf15.storyapp.databinding.ActivityAddStoryBinding
 import com.jordyf15.storyapp.utils.Utils
 import com.jordyf15.storyapp.utils.ViewModelFactory
@@ -57,21 +58,6 @@ class AddStoryActivity : AppCompatActivity() {
             )
         }
 
-        addStoryViewModel.isLoading.observe(this) {
-            showLoading(it)
-        }
-        addStoryViewModel.finishAddStory.observe(this) {
-            if (it) {
-                binding.tvErrorMsg.text = ""
-                addStoryViewModel.resetAddStory()
-                moveToMainActivity()
-            }
-        }
-        addStoryViewModel.errorResponse.observe(this) {
-            if (it != null && it.error) {
-                binding.tvErrorMsg.text = it.message
-            }
-        }
         binding.btnUpload.isEnabled = false
 
         binding.btnGallery.setOnClickListener {
@@ -85,7 +71,24 @@ class AddStoryActivity : AppCompatActivity() {
                 Log.e("ADD_STORY", currentLatitude.toString()+currentLongitude.toString())
                 val file: File = getFile as File
                 val description = binding.edtDescription.text.toString()
-                addStoryViewModel.addStory(file, description, currentLatitude, currentLongitude)
+                addStoryViewModel.addStory(file, description, currentLatitude, currentLongitude).observe(this){ result->
+                    if (result != null) {
+                        when (result) {
+                            is Result.Loading -> {
+                                binding.progressBar.visibility = View.VISIBLE
+                            }
+                            is Result.Success -> {
+                                binding.progressBar.visibility = View.GONE
+                                binding.tvErrorMsg.text = ""
+                                moveToMainActivity()
+                            }
+                            is Result.Error -> {
+                                binding.progressBar.visibility = View.GONE
+                                binding.tvErrorMsg.text = result.error
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -156,10 +159,6 @@ class AddStoryActivity : AppCompatActivity() {
         intent.type = "image/*"
         val chooser = Intent.createChooser(intent, "Choose a Picture")
         launcherIntentGallery.launch(chooser)
-    }
-
-    private fun showLoading(isLoading: Boolean) {
-        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
     private fun moveToMainActivity() {

@@ -9,10 +9,6 @@ import com.jordyf15.storyapp.data.remote.response.RegisterResponse
 class RegisterViewModel(
     private val userRepository: UserRepository
 ) : ViewModel() {
-    val registerResponse: LiveData<RegisterResponse> = userRepository.registerResponse
-    val errorResponse: LiveData<ErrorResponse> = userRepository.registerViewErrorResponse
-    val isLoading: LiveData<Boolean> = userRepository.registerViewIsLoading
-
     fun register(name: String, email: String, password: String) =
         userRepository.register(name, email, password)
 }
