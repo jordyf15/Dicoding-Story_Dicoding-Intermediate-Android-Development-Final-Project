@@ -5,16 +5,15 @@ import android.graphics.Rect
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
-import android.util.Log
 import androidx.appcompat.widget.AppCompatEditText
 import com.jordyf15.storyapp.R
 
 class NameEditText : AppCompatEditText {
-    constructor(context: Context) : super(context){
+    constructor(context: Context) : super(context) {
         init()
     }
 
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs){
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
         init()
     }
 
@@ -22,7 +21,7 @@ class NameEditText : AppCompatEditText {
         context,
         attrs,
         defStyleAttr
-    ){
+    ) {
         init()
     }
 
@@ -34,12 +33,17 @@ class NameEditText : AppCompatEditText {
     }
 
     private fun init() {
-        addTextChangedListener(object: TextWatcher {
+        addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 //  do nothing
             }
 
-            override fun onTextChanged(text: CharSequence?, start: Int, lengthBefore: Int, lengthAfter: Int) {
+            override fun onTextChanged(
+                text: CharSequence?,
+                start: Int,
+                lengthBefore: Int,
+                lengthAfter: Int
+            ) {
                 if (text.toString().isEmpty()) {
                     error = resources.getString(R.string.name_error)
                 }

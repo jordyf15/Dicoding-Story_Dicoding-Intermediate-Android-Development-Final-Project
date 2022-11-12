@@ -68,27 +68,28 @@ class AddStoryActivity : AppCompatActivity() {
         }
         binding.btnUpload.setOnClickListener {
             if (getFile != null) {
-                Log.e("ADD_STORY", currentLatitude.toString()+currentLongitude.toString())
+                Log.e("ADD_STORY", currentLatitude.toString() + currentLongitude.toString())
                 val file: File = getFile as File
                 val description = binding.edtDescription.text.toString()
-                addStoryViewModel.addStory(file, description, currentLatitude, currentLongitude).observe(this){ result->
-                    if (result != null) {
-                        when (result) {
-                            is Result.Loading -> {
-                                binding.progressBar.visibility = View.VISIBLE
-                            }
-                            is Result.Success -> {
-                                binding.progressBar.visibility = View.GONE
-                                binding.tvErrorMsg.text = ""
-                                moveToMainActivity()
-                            }
-                            is Result.Error -> {
-                                binding.progressBar.visibility = View.GONE
-                                binding.tvErrorMsg.text = result.error
+                addStoryViewModel.addStory(file, description, currentLatitude, currentLongitude)
+                    .observe(this) { result ->
+                        if (result != null) {
+                            when (result) {
+                                is Result.Loading -> {
+                                    binding.progressBar.visibility = View.VISIBLE
+                                }
+                                is Result.Success -> {
+                                    binding.progressBar.visibility = View.GONE
+                                    binding.tvErrorMsg.text = ""
+                                    moveToMainActivity()
+                                }
+                                is Result.Error -> {
+                                    binding.progressBar.visibility = View.GONE
+                                    binding.tvErrorMsg.text = result.error
+                                }
                             }
                         }
                     }
-                }
             }
         }
 

@@ -1,9 +1,6 @@
 package com.jordyf15.storyapp.utils
 
-import com.jordyf15.storyapp.data.remote.response.ErrorResponse
-import com.jordyf15.storyapp.data.remote.response.LoginResponse
-import com.jordyf15.storyapp.data.remote.response.LoginResult
-import com.jordyf15.storyapp.data.remote.response.RegisterResponse
+import com.jordyf15.storyapp.data.remote.response.*
 
 object DataDummy {
     fun generateDummyRegisterResponse(): RegisterResponse {
@@ -15,7 +12,24 @@ object DataDummy {
         return LoginResponse(false, "Login successful", loginResult)
     }
 
-    fun generateDummyErrorResponse(): ErrorResponse {
-        return ErrorResponse(true, "An error has occured")
+    fun generateDummyAddStoryResponse(): AddStoryResponse {
+        return AddStoryResponse(false, "Add Story Successful")
+    }
+
+    fun generateDummyGetAllStoryResponse(): GetAllStoryResponse {
+        val storyList = ArrayList<Story>()
+        for (i in 0..10) {
+            val story = Story(
+                "id $i",
+                "name $i",
+                "description $i",
+                "/https://dicoding-web-img.sgp1.cdn.digitaloceanspaces.com/story/image$i",
+                "2022-02-22T22:22:22Z",
+                1.1,
+                1.1,
+            )
+            storyList.add(story)
+        }
+        return GetAllStoryResponse(false, "Get Story Successful", storyList)
     }
 }

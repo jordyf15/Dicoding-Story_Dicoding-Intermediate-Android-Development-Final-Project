@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
     private fun getData() {
         val listStoryAdapter = ListStoryAdapter()
         binding.rvStories.adapter = listStoryAdapter.withLoadStateFooter(
-            footer = LoadingStateAdapter{
+            footer = LoadingStateAdapter {
                 listStoryAdapter.retry()
             }
         )

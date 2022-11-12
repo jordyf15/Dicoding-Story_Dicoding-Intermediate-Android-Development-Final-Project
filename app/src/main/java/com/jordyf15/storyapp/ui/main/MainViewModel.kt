@@ -7,7 +7,6 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.jordyf15.storyapp.data.StoryRepository
 import com.jordyf15.storyapp.data.UserRepository
-import com.jordyf15.storyapp.data.remote.response.ErrorResponse
 import com.jordyf15.storyapp.data.remote.response.Story
 
 class MainViewModel(

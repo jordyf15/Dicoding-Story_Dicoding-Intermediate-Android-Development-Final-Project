@@ -12,6 +12,7 @@ import org.mockito.junit.MockitoJUnitRunner
 class StoryDetailViewModelTest {
     @Mock
     private lateinit var userRepository: UserRepository
+
     private lateinit var storyDetailViewModel: StoryDetailViewModel
 
     @Before

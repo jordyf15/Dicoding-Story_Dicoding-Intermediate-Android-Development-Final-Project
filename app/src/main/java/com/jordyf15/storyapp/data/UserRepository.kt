@@ -12,7 +12,7 @@ import com.jordyf15.storyapp.data.remote.response.RegisterResponse
 import com.jordyf15.storyapp.data.remote.retrofit.ApiService
 import retrofit2.HttpException
 
-class UserRepository private constructor(
+class UserRepository constructor(
     private val apiService: ApiService,
     private val userPreference: UserPreference
 ) {

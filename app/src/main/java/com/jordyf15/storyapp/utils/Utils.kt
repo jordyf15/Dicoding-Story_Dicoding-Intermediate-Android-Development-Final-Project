@@ -3,11 +3,8 @@ package com.jordyf15.storyapp.utils
 import android.app.Application
 import android.content.ContentResolver
 import android.content.Context
-import android.graphics.Color
 import android.net.Uri
 import android.os.Environment
-import com.google.android.gms.maps.model.BitmapDescriptor
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.jordyf15.storyapp.R
 import java.io.File
 import java.io.FileOutputStream
@@ -34,10 +31,11 @@ object Utils {
 
     fun createdAtToNow(createdAtStr: String): String {
         val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SS'Z'", Locale.US)
+        format.timeZone = TimeZone.getTimeZone("UTC")
         var date: String
         try {
             val createdAtTime = format.parse(createdAtStr)?.time
-            val nowTime = Date().time
+            val nowTime = Calendar.getInstance().timeInMillis
             val result = nowTime - createdAtTime!!
             date = if (result > yearTime) {
                 "${floor(result / monthTime).toInt()} Years ago"

@@ -100,11 +100,11 @@ class LoginActivity : AppCompatActivity() {
     private fun login() {
         val email = binding.edtEmail.text.toString()
         val password = binding.edtPassword.text.toString()
-        loginViewModel.login(email, password).observe(this) { result->
-            if(result != null) {
+        loginViewModel.login(email, password).observe(this) { result ->
+            if (result != null) {
                 when (result) {
                     is Result.Loading -> {
-                        binding.progressBar.visibility= View.VISIBLE
+                        binding.progressBar.visibility = View.VISIBLE
                     }
                     is Result.Success -> {
                         binding.progressBar.visibility = View.GONE

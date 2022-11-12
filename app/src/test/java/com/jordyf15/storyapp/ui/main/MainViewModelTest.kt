@@ -3,7 +3,6 @@ package com.jordyf15.storyapp.ui.main
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.jordyf15.storyapp.data.StoryRepository
 import com.jordyf15.storyapp.data.UserRepository
-import com.jordyf15.storyapp.utils.MainDispatcherRule
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -17,18 +16,17 @@ class MainViewModelTest {
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
 
-    @get:Rule
-    val mainDispatcherRules = MainDispatcherRule()
-
     @Mock
     private lateinit var userRepository: UserRepository
+
     @Mock
     private lateinit var storyRepository: StoryRepository
+
     private lateinit var mainViewModel: MainViewModel
 
     @Before
     fun setUp() {
-        mainViewModel = MainViewModel(storyRepository,userRepository)
+        mainViewModel = MainViewModel(storyRepository, userRepository)
     }
 
     @Test

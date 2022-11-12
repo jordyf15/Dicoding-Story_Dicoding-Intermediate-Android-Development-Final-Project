@@ -1,0 +1,40 @@
+LoginViewModel
+a. ketika berhasil login
+	memastikan mengembalikan Result.Success
+	memastikan data tidak null
+	memastikan mengembalikan data LoginResponse dengan benar
+b. ketika gagal login
+	memastikan mengembalikan Result.Error
+
+RegisterViewModel
+a. ketika berhasil register
+	memastikan mengembalikan Result.Success
+	memastikan data tidak null
+	memastikan mengembalikan data RegisterResponse dengan benar
+b. ketika gagal register
+	memastikan mengembalikan Result.Error
+
+StoryDetailViewModel
+a. ketika logout
+	memastikan memanggil function logout dari userRepository
+
+MainViewModel
+a. ketika logout
+	memastikan memanggil function logout dari userRepository
+
+AddStoryViewModel
+a. ketika berhasil add story
+	memastikan mengembalikan Result.Success
+	memastikan data tidak null
+	memastikan mengembalikan data AddStoryResponse dengan benar
+b. ketika gagal add story
+	memastikan mengembalikan Result.Error
+
+MapViewModel
+a. ketika berhasil memuat data story
+	memastikan mengembalikan Result.Success
+	memastikan data tidak null
+	memastikan jumlah data sesuai dengan yang diharapkan
+b. ketika gagal memuat data story
+	memastikan mengembalikan Result.Error
+
