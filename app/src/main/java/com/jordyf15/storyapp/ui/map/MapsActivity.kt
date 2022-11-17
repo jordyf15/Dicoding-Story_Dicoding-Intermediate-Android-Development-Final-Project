@@ -63,7 +63,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.uiSettings.isCompassEnabled = true
         mMap.uiSettings.isMapToolbarEnabled = true
 
-        mapViewModel.getAllStoryWithLocations().observe(this) { result->
+        mapViewModel.getAllStoryWithLocations().observe(this) { result ->
             if (result != null) {
                 when (result) {
                     is Result.Loading -> {

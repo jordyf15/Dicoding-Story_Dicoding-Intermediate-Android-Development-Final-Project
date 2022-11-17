@@ -9,12 +9,12 @@ import androidx.appcompat.widget.AppCompatEditText
 import com.jordyf15.storyapp.R
 
 class EmailEditText : AppCompatEditText {
-    constructor(context: Context) : super(context){
+    constructor(context: Context) : super(context) {
         init()
     }
 
 
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs){
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
         init()
     }
 
@@ -23,24 +23,29 @@ class EmailEditText : AppCompatEditText {
         context,
         attrs,
         defStyleAttr
-    ){
+    ) {
         init()
     }
 
     override fun onFocusChanged(focused: Boolean, direction: Int, previouslyFocusedRect: Rect?) {
         super.onFocusChanged(focused, direction, previouslyFocusedRect)
-        if(!focused && !android.util.Patterns.EMAIL_ADDRESS.matcher(text.toString()).matches()){
+        if (!focused && !android.util.Patterns.EMAIL_ADDRESS.matcher(text.toString()).matches()) {
             error = resources.getString(R.string.email_error)
         }
     }
 
     private fun init() {
-        addTextChangedListener(object: TextWatcher {
+        addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 // do nothing
             }
 
-            override fun onTextChanged(text: CharSequence?, start: Int, lengthBefore: Int, lengthAfter: Int) {
+            override fun onTextChanged(
+                text: CharSequence?,
+                start: Int,
+                lengthBefore: Int,
+                lengthAfter: Int
+            ) {
                 if (!android.util.Patterns.EMAIL_ADDRESS.matcher(text.toString()).matches()) {
                     error = resources.getString(R.string.email_error)
                 }

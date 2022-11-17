@@ -22,6 +22,10 @@ MainViewModel
 a. ketika logout
 	memastikan memanggil function logout dari userRepository
 
+b. Ketika berhasil memuat data stories
+	memastikan data tidak null
+	memastikan jumlah data sesuai dengan yang diharapkan
+
 AddStoryViewModel
 a. ketika berhasil add story
 	memastikan mengembalikan Result.Success

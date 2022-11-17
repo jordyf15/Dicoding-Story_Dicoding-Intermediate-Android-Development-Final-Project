@@ -9,11 +9,11 @@ import androidx.appcompat.widget.AppCompatEditText
 import com.jordyf15.storyapp.R
 
 class DescriptionEditText : AppCompatEditText {
-    constructor(context: Context) : super(context){
+    constructor(context: Context) : super(context) {
         init()
     }
 
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs){
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
         init()
     }
 
@@ -21,7 +21,7 @@ class DescriptionEditText : AppCompatEditText {
         context,
         attrs,
         defStyleAttr
-    ){
+    ) {
         init()
     }
 
@@ -33,12 +33,17 @@ class DescriptionEditText : AppCompatEditText {
     }
 
     private fun init() {
-        addTextChangedListener(object: TextWatcher{
+        addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 // do nothing
             }
 
-            override fun onTextChanged(text: CharSequence?, start: Int, lengthBefore: Int, lengthAfter: Int) {
+            override fun onTextChanged(
+                text: CharSequence?,
+                start: Int,
+                lengthBefore: Int,
+                lengthAfter: Int
+            ) {
                 if (text.toString().isEmpty()) {
                     error = resources.getString(R.string.description_error)
                 }
