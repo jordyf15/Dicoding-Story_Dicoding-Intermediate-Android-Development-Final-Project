@@ -2,10 +2,9 @@ package com.jordyf15.storyapp.ui.customview
 
 import android.content.Context
 import android.graphics.Rect
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.core.widget.doOnTextChanged
 import com.jordyf15.storyapp.R
 
 class NameEditText : AppCompatEditText {
@@ -33,26 +32,10 @@ class NameEditText : AppCompatEditText {
     }
 
     private fun init() {
-        addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                //  do nothing
+        doOnTextChanged { text, _, _, _ ->
+            if (text.toString().isEmpty()) {
+                error = resources.getString(R.string.name_error)
             }
-
-            override fun onTextChanged(
-                text: CharSequence?,
-                start: Int,
-                lengthBefore: Int,
-                lengthAfter: Int
-            ) {
-                if (text.toString().isEmpty()) {
-                    error = resources.getString(R.string.name_error)
-                }
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-                //  do nothing
-            }
-
-        })
+        }
     }
 }

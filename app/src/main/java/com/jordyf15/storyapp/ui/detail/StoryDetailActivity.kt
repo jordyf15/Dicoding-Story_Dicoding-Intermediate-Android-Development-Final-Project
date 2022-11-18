@@ -20,10 +20,6 @@ class StoryDetailActivity : AppCompatActivity() {
     private lateinit var viewModelFactory: ViewModelFactory
     private lateinit var storyDetailViewModel: StoryDetailViewModel
 
-    companion object {
-        const val EXTRA_STORY = "extra_story"
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityStoryDetailBinding.inflate(layoutInflater)
@@ -75,4 +71,7 @@ class StoryDetailActivity : AppCompatActivity() {
         }
     }
 
+    companion object {
+        const val EXTRA_STORY = "extra_story"
+    }
 }
